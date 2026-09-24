@@ -17,50 +17,52 @@ on:
 jobs:
   build:
     runs-on: ubuntu-24.04
+    
+  
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - model: r9s
-            branch: rebased-11
-            variant: ksu
-          - model: r9s
-            branch: rebased-11
-            variant: susfs
-          - model: r9s
-            branch: rebased-11
-            variant: vanilla
+          # - model: r9s
+          #   branch: rebased-11
+          #   variant: ksu
+          # - model: r9s
+          #   branch: rebased-11
+          #   variant: susfs
+          # - model: r9s
+          #   branch: rebased-11
+          #   variant: vanilla
     
           - model: o1s
             branch: rebased-11
             variant: ksu
-          - model: o1s
-            branch: rebased-11
-            variant: susfs
+          # - model: o1s
+          #   branch: rebased-11
+          #   variant: susfs
           - model: o1s
             branch: rebased-11
             variant: vanilla
     
-          - model: t2s
-            branch: rebased-11
-            variant: ksu
-          - model: t2s
-            branch: rebased-11
-            variant: susfs
-          - model: t2s
-            branch: rebased-11
-            variant: vanilla
+          # - model: t2s
+          #   branch: rebased-11
+          #   variant: ksu
+          # - model: t2s
+          #   branch: rebased-11
+          #   variant: susfs
+          # - model: t2s
+          #   branch: rebased-11
+          #   variant: vanilla
     
-          - model: p3s
-            branch: rebased-11
-            variant: ksu
-          - model: p3s
-            branch: rebased-11
-            variant: susfs
-          - model: p3s
-            branch: rebased-11
-            variant: vanilla
+          # - model: p3s
+          #   branch: rebased-11
+          #   variant: ksu
+          # - model: p3s
+          #   branch: rebased-11
+          #   variant: susfs
+          # - model: p3s
+          #   branch: rebased-11
+          #   variant: vanilla
     
     steps:
     - name: Checkout repository
@@ -106,6 +108,8 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-24.04
+    permissions: 
+      contents: write
 
     steps:
     - name: Download build artifacts
@@ -116,7 +120,7 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v2
       with:
-        tag_name: ${{ github.event.inputs.tag_name }}
+        tag_name: ${{ github.event.inputs.tag_name || github.ref_name }}
         name: ${{ github.event.inputs.release_name || github.ref_name }}
         files: artifacts/**/*.zip
       env:
